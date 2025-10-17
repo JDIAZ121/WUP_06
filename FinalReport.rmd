@@ -47,6 +47,20 @@ This problem was a categorical categorical problem.We found out in the categoric
 
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question. Bottom line is to explain the features of the graph that are relevant to conforming or departing to what is expected by your null hypothesis !-->
 
+```{r}
+dd3 <- mydata %>% group_by(cappun,race) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd3,aes(x=cappun,y=count,fill=race))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd3,aes(x=cappun,y=prcnt*100,fill=race)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
 
 
 ## Now with The Most data (fewer variables gives more data points)
@@ -57,8 +71,24 @@ This problem was a categorical categorical problem.We found out in the categoric
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
-
-
+```{r}
+install.packages("janitor")
+library(janitor)
+row_perc <- round(prop.table(table2, margin = 1) * 100, 2)
+row_perc <- addmargins(row_perc, margin = 2)
+tabyl(mydata, cappun, race) %>%
+  adorn_percentages("row") %>%
+  adorn_totals("both") %>%
+  adorn_pct_formatting(digits = 1)
+col_perc <- round(prop.table(table2, margin = 2) * 100, 2)
+col_perc <- addmargins(col_perc, margin = 1)  # adds a "total" row
+col_perc
+table2 <- xtabs(~cappun + race, data=mydata)
+prop.table(table2, margin = 1) * 100
+rowPerc(table2)
+colPerc(table2)
+```
+Of the people who favor capital punishment, almost 80% of them are white people.black people made up 11.72 %  of the people who favor capital punishment. 8.47% were other people.in the opposing side,the majority was 65.38%,which were white. there was 24.11% were black. Lastly there was 10.51% who were other.
 
 ## Now with More data
 
